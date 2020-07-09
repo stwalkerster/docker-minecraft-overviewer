@@ -5,13 +5,13 @@ RUN apt-get install -q -y build-essential python3-dev python3-numpy python3-pil 
 RUN mkdir /opt/overviewer
 WORKDIR /opt/overviewer
 COPY git/ .
-# RUN git clone git://github.com/overviewer/Minecraft-Overviewer.git .
 RUN ls -l
 RUN python3 setup.py build
 RUN wget https://overviewer.org/textures/${MinecraftVersion} -O ${MinecraftVersion}.jar
 
 FROM ubuntu:bionic
 ARG MinecraftVersion
+ARG TEAMCITY_PROJECT_NAME TEAMCITY_BUILDCONF_NAME BUILD_NUMBER BUILD_VCS_NUMBER_BuildPrerequisites_Docker BUILD_VCS_NUMBER_BuildPrerequisites_MinecraftOverviewer
 LABEL Maintainer="Simon Walker <simon@stwalkerster.co.uk>"
 LABEL TeamCityProject=${TEAMCITY_PROJECT_NAME}
 LABEL TeamCityBuildConf=${TEAMCITY_BUILDCONF_NAME}
