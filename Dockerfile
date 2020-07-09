@@ -1,16 +1,26 @@
 FROM ubuntu:bionic AS build
+ARG MinecraftVersion
 RUN apt-get update
 RUN apt-get install -q -y build-essential python3-dev python3-numpy python3-pil git wget
 RUN mkdir /opt/overviewer
 WORKDIR /opt/overviewer
-RUN git clone git://github.com/overviewer/Minecraft-Overviewer.git .
+COPY git/ .
+# RUN git clone git://github.com/overviewer/Minecraft-Overviewer.git .
+RUN ls -l
 RUN python3 setup.py build
-RUN wget https://overviewer.org/textures/1.15.2 -O 1.15.2.jar
+RUN wget https://overviewer.org/textures/${MinecraftVersion} -O ${MinecraftVersion}.jar
 
 FROM ubuntu:bionic
+ARG MinecraftVersion
 LABEL Maintainer="Simon Walker <simon@stwalkerster.co.uk>"
+LABEL TeamCityProject=${TEAMCITY_PROJECT_NAME}
+LABEL TeamCityBuildConf=${TEAMCITY_BUILDCONF_NAME}
+LABEL Build=${BUILD_NUMBER}
+LABEL DockerfileGitRev=${BUILD_VCS_NUMBER_BuildPrerequisites_Docker}
+LABEL OverviewerGitRev=${BUILD_VCS_NUMBER_BuildPrerequisites_Docker}
+LABEL Minecraft=${MinecraftVersion}
 RUN useradd -d /opt/overviewer overviewer \
-    && mkdir -p /opt/overviewer/.minecraft/versions/1.15.2 \
+    && mkdir -p /opt/overviewer/.minecraft/versions/${MinecraftVersion} \
     && apt-get update \
     && apt-get install --no-install-recommends -q -y python3 python3-numpy python3-pil \
     && apt-get clean \
@@ -19,7 +29,7 @@ USER overviewer
 WORKDIR /opt/overviewer
 COPY --from=build /opt/overviewer/overviewer.py .
 COPY --from=build /opt/overviewer/overviewer_core /opt/overviewer/overviewer_core/
-COPY --from=build /opt/overviewer/1.15.2.jar /opt/overviewer/.minecraft/versions/1.15.2/1.15.2.jar
+COPY --from=build /opt/overviewer/${MinecraftVersion}.jar /opt/overviewer/.minecraft/versions/${MinecraftVersion}/${MinecraftVersion}.jar
 
 ENV BUILD_WORLD_UNIX_NAME=minecraft \
     BUILD_WORLD_NAME=Minecraft \
