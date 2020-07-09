@@ -11,7 +11,11 @@ RUN wget https://overviewer.org/textures/${MinecraftVersion} -O ${MinecraftVersi
 
 FROM ubuntu:bionic
 ARG MinecraftVersion
-ARG TEAMCITY_PROJECT_NAME TEAMCITY_BUILDCONF_NAME BUILD_NUMBER BUILD_VCS_NUMBER_BuildPrerequisites_Docker BUILD_VCS_NUMBER_BuildPrerequisites_MinecraftOverviewer
+ARG TEAMCITY_PROJECT_NAME
+ARG TEAMCITY_BUILDCONF_NAME
+ARG BUILD_NUMBER
+ARG BUILD_VCS_NUMBER_BuildPrerequisites_Docker
+ARG BUILD_VCS_NUMBER_BuildPrerequisites_MinecraftOverviewer
 LABEL Maintainer="Simon Walker <simon@stwalkerster.co.uk>"
 LABEL TeamCityProject=${TEAMCITY_PROJECT_NAME}
 LABEL TeamCityBuildConf=${TEAMCITY_BUILDCONF_NAME}
