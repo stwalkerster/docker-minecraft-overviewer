@@ -1,27 +1,16 @@
-FROM ubuntu:bionic AS build
+FROM ubuntu:focal AS build
 ARG MinecraftVersion
 RUN apt-get update
 RUN apt-get install -q -y build-essential python3-dev python3-numpy python3-pil git wget
 RUN mkdir /opt/overviewer
 WORKDIR /opt/overviewer
 COPY git/ .
-RUN ls -l
 RUN python3 setup.py build
 RUN wget https://overviewer.org/textures/${MinecraftVersion} -O ${MinecraftVersion}.jar
 
-FROM ubuntu:bionic
+FROM ubuntu:focal
 ARG MinecraftVersion
-ARG TEAMCITY_PROJECT_NAME
-ARG TEAMCITY_BUILDCONF_NAME
-ARG BUILD_NUMBER
-ARG BUILD_VCS_NUMBER_BuildPrerequisites_Docker
-ARG BUILD_VCS_NUMBER_BuildPrerequisites_MinecraftOverviewer
 LABEL Maintainer="Simon Walker <simon@stwalkerster.co.uk>"
-LABEL TeamCityProject=${TEAMCITY_PROJECT_NAME}
-LABEL TeamCityBuildConf=${TEAMCITY_BUILDCONF_NAME}
-LABEL Build=${BUILD_NUMBER}
-LABEL DockerfileGitRev=${BUILD_VCS_NUMBER_BuildPrerequisites_Docker}
-LABEL OverviewerGitRev=${BUILD_VCS_NUMBER_BuildPrerequisites_Docker}
 LABEL Minecraft=${MinecraftVersion}
 RUN useradd -d /opt/overviewer overviewer \
     && mkdir -p /opt/overviewer/.minecraft/versions/${MinecraftVersion} \
