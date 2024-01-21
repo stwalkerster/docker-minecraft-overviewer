@@ -1,4 +1,4 @@
-FROM ubuntu:focal AS build
+FROM ubuntu:jammy AS build
 ARG MinecraftVersion
 RUN apt-get update
 RUN apt-get install -q -y build-essential python3-dev python3-numpy python3-pil git wget
