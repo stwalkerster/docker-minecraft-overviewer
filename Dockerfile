@@ -8,7 +8,7 @@ COPY git/ .
 RUN python3 setup.py build
 RUN wget https://overviewer.org/textures/${MinecraftVersion} -O ${MinecraftVersion}.jar
 
-FROM ubuntu:focal
+FROM ubuntu:jammy
 ARG MinecraftVersion
 LABEL Maintainer="Simon Walker <simon@stwalkerster.co.uk>"
 LABEL Minecraft=${MinecraftVersion}
